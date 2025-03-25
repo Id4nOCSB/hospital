@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ontario Hospital Resources</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Basic CSS styling */
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        #controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        #controls select,
+        #controls input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            margin: 5px;
+        }
+
+        #controls select {
+            width: 250px;
+        }
+
+        #controls input {
+            width: 300px;
+        }
+
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+
+        .hospital-card {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s ease;
+        }
+
+        .hospital-card:hover {
+            background-color: #f0f0f0;
+        }
+
+        #hospital-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        @media (max-width: 600px) {
+            #controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #controls select,
+            #controls input {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        /* Style for the modal */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%; /* Could be more or less, depending on screen size */
+            max-width: 600px;
+            border-radius: 8px;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+          from {opacity: 0;}
+          to {opacity: 1;}
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+        }
+
+        .modal-equipment-list {
+            list-style-type: none;
+            padding: 0;
+            margin-bottom: 15px;
+        }
+
+        .modal-equipment-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-equipment-list li:last-child {
+            border-bottom: none;
+        }
+
+        .modal-map-container {
+            height: 300px;
+            width: 100%;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .modal-contact-info {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+    <h1>Ontario Hospital Resources</h1>
+
+    <div id="controls">
+        <select id="equipment-filter">
+            <option value="">All Equipment</option>
+        </select>
+        <input type="text" id="location-filter" placeholder="Enter location...">
+    </div>
+
+    <div id="map"></div>
+    <div id="hospital-list"></div>
+     <div id="no-results" class="no-results" style="display:none;">No hospitals found matching your criteria.</div>
+
+    <div id="hospitalModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Hospital Name</h2>
+            <div class="modal-map-container"></div>
+            <p class="modal-address">Address:</p>
+            <p class="modal-contact-info">Contact:</p>
+            <h3>Equipment:</h3>
+            <ul class="modal-equipment-list">
+                </ul>
+        </div>
+    </div>
+
+    <script>
+       // Sample hospital data (replace with your actual data)
+        const hospitals = [
+            {
+                hospitalId: "1",
+                name: "Toronto General Hospital",
+                address: "200 Elizabeth St, Toronto, ON M5G 2C4",
+                latitude: 43.6596,
+                longitude: -79.3872,
+                contact: "416-340-8111",
+                equipment: [
+                    { name: "MRI Machine", quantity: 3 },
+                    { name: "CT Scanner", quantity: 2 },
+                    { name: "Surgical Robot", quantity: 1 },
+                    { name: "X-Ray Machine", quantity: 5}
+                ]
+            },
+            {
+                hospitalId: "2",
+                name: "Ottawa Hospital - General Campus",
+                address: "1053 Carling Ave, Ottawa, ON K1Y 4E9",
+                latitude: 45.3912,
+                longitude: -75.7219,
+                 contact: "613-722-7000",
+                equipment: [
+                    { name: "MRI Machine", quantity: 2 },
+                    { name: "Linear Accelerator", quantity: 4 },
+                    { name: "CT Scanner", quantity: 3}
+                ]
+            },
+            {
+                hospitalId: "3",
+                name: "Mount Sinai Hospital",
+                address: "600 University Ave, Toronto, ON M5G 1X5",
+                latitude: 43.6579,
+                longitude: -79.3915,
+                 contact: "416-596-4200",
+                equipment: [
+                    { name: "MRI Machine", quantity: 1 },
+                    { name: "PET Scanner", quantity: 1 },
+                    { name: "Surgical Robot", quantity: 2 }
+                ]
+            },
+            {
+                hospitalId: "4",
+                name: "Hamilton General Hospital",
+                address: "237 Barton St E, Hamilton, ON L8L 2X2",
+                latitude: 43.2562,
+                longitude: -79.8665,
+                 contact: "905-527-2711",
+                equipment: [
+                    { name: "CT Scanner", quantity: 2 },
+                    { name: "Angiography Suite", quantity: 1 },
+                    {name: "X-Ray Machine", quantity: 4}
+                ]
+            },
+            {
+                hospitalId: "5",
+                name: "London Health Sciences Centre - Victoria Hospital",
+                address: "800 Commissioners Rd E, London, ON N6A 5W9",
+                latitude: 42.9813,
+                longitude: -81.2330,
+                 contact: "519-685-8500",
+                equipment: [
+                    { name: "MRI Machine", quantity: 2 },
+                    { name: "SPECT Scanner", quantity: 1 }
+                ]
+            },
+            {
+                hospitalId: "6",
+                name: "Kingston Health Sciences Centre - Kingston General Hospital",
+                address: "76 Stuart St, Kingston, ON K7L 2V7",
+                latitude: 44.2323,
+                longitude: -76.4891,
+                 contact: "613-549-6666",
+                equipment: [
+                    {name: "CT Scanner", quantity: 1},
+                    {name: "MRI Machine", quantity: 1}
+                ]
+            },
+            {
+                hospitalId: "7",
+                name: "Sunnybrook Health Sciences Centre",
+                address: "2075 Bayview Ave, Toronto, ON M4N 3M5",
+                latitude: 43.7245,
+                longitude: -79.3713,
+                 contact: "416-480-6100",
+                equipment: [
+                    {name: "MRI Machine", quantity: 3},
+                    {name: "Surgical Robot", quantity: 2},
+                    {name: "Linear Accelerator", quantity: 5}
+                ]
+            },
+            {
+                hospitalId: "8",
+                name: "St. Michael's Hospital",
+                address: "30 Bond St, Toronto, ON M5B 1W8",
+                latitude: 43.6534,
+                longitude: -79.3771,
+                 contact: "416-360-4000",
+                equipment: [
+                    {name: "CT Scanner", quantity: 2},
+                    {name: "MRI Machine", quantity: 2}
+                ]
+            },
+            {
+              hospitalId: "9",
+              name: "North York General Hospital",
+              address: "550 Finch Ave W, North York, ON M2R 1N5",
+              latitude: 43.7781,
+              longitude: -79.4115,
+               contact: "416-756-6000",
+              equipment: [
+                {name: "MRI Machine", quantity: 1},
+                {name: "CT Scanner", quantity: 2}
+              ]
+            },
+            {
+                hospitalId: "10",
+                name: "Credit Valley Hospital",
+                address: "2200 Eglinton Ave W, Mississauga, ON L5M 2N1",
+                latitude: 43.5941,
+                longitude: -79.7234,
+                 contact: "905-813-2200",
+                equipment: [
+                  {name: "MRI", quantity: 2},
+                  {name: "CT Scanner", quantity: 2}
+                ]
+            },
+            {
+                hospitalId: "11",
+                name: "Thunder Bay Regional Health Sciences Centre",
+                address: "985 Oliver Rd, Thunder Bay, ON P7B 6V4",
+                latitude: 48.4217,
+                longitude: -89.2677,
+                 contact: "807-684-6000",
+                equipment: [
+                    { name: "MRI Machine", quantity: 1 },
+                    { name: "CT Scanner", quantity: 2 },
+                    { name: "Radiation Therapy", quantity: 2}
+                ]
+            },
+            {
+                hospitalId: "12",
+                name: "Sault Area Hospital",
+                address: "750 Great Northern Rd, Sault Ste. Marie, ON P6B 0A8",
+                latitude: 46.5212,
+                longitude: -84.3413,
+                 contact: "705-759-3434",
+                equipment: [
+                    {name: "CT Scanner", quantity: 1},
+                    {name: "X-Ray Machine", quantity: 3}
+                ]
+            },
+            {
+                hospitalId: "13",
+                name: "Sudbury Health Sciences North",
+                address: "41 Ramsey Lake Rd, Sudbury, ON P3E 5J1",
+                latitude: 46.4854,
+                longitude: -80.9933,
+                 contact: "705-522-2200",
+                equipment: [
+                  {name: "MRI Machine", quantity: 2},
+                  {name: "CT Scanner", quantity: 3}
+                ]
+            },
+            {
+                hospitalId: "14",
+                name: "Royal Victoria Regional Health Centre",
+                address: "201 Georgian Dr, Barrie, ON L4M 6M2",
+                latitude: 44.3928,
+                longitude: -79.6914,
+                 contact: "705-728-9090",
+                equipment: [
+                  {name: "MRI Machine", quantity: 1},
+                  {name: "CT Scanner", quantity: 2}
+                ]
+            },
+            {
+                hospitalId: "15",
+                name: "Guelph General Hospital",
+                address: "115 Delhi St, Guelph, ON N1E 4J4",
+                latitude: 43.5463,
+                longitude: -80.2483,
+                 contact: "519-822-5350",
+                equipment: [
+                    {name: "CT Scanner", quantity: 1},
+                    {name: "Ultrasound", quantity: 4}
+                ]
+            },
+            {
+                hospitalId: "16",
+                name: "Brantford General Hospital",
+                address: "200 Terrace Hill St, Brantford, ON N3R 1T5",
+                latitude: 43.1417,
+                longitude: -80.2718,
+                 contact: "519-752-7891",
+                equipment: [
+                    {name: "CT Scanner", quantity: 1}
+                ]
+            },
+            {
+                hospitalId: "17",
+                name: "Peterborough Regional Health Centre",
+                address: "1 Hospital Dr, Peterborough, ON K9J 7C6",
+                latitude: 44.3218,
+                longitude: -78.3213,
+                 contact: "705-743-2121",
+                equipment: [
+                  {name: "MRI Machine", quantity: 1},
+                  {name: "CT Scanner", quantity: 2}
+                ]
+            },
+            {
+                hospitalId: "18",
+                name: "Sarnia Bluewater Health",
+                address: "89 Norman St, Sarnia, ON N7T 6S3",
+                latitude: 42.9763,
+                longitude: -82.4099,
+                 contact: "519-464-4400",
+                equipment: [
+                    {name: "CT Scanner", quantity: 1}
+                ]
+            },
+             {
+                hospitalId: "19",
+                name: "Cornwall Community Hospital",
+                address: "480 McClelland Dr, Cornwall, ON K6H 5S5",
+                latitude: 45.0125,
+                longitude: -74.7335,
+                 contact: "613-932-3300",
+                equipment: [
+                    {name: "CT Scanner", quantity: 1}
+                ]
+            },
+            {
+                hospitalId: "20",
+                name: "Lakeridge Health Oshawa",
+                address: "1 Hospital Ct, Oshawa, ON L1G 2B9",
+                latitude: 43.9015,
+                longitude: -78.8610,
+                 contact: "905-576-8711",
+                equipment: [
+                  {name: "MRI Machine", quantity: 1},
+                  {name: "CT Scanner", quantity: 2}
+                ]
+            },
+            {
+                hospitalId: "21",
+                name: "North Bay Regional Health Centre",
+                address: "50 College Dr, North Bay, ON P1B 5A4",
+                latitude: 46.3126,
+                longitude: -79.4567,
+                contact: "705-474-8600",
+                equipment: [
+                    {name: "MRI Machine", quantity: 1},
+                    {name: "CT Scanner", quantity: 2},
+                    {name: "X-Ray Machine", quantity: 3}
+                ]
+            },
+            {
+                hospitalId: "22",
+                name: "Glengarry Memorial Hospital",
+                address: "20269 County Rd 43, Alexandria, ON K0C 1A0",
+                latitude: 45.3132,
+                longitude: -74.6309,
+                contact: "613-525-2222",
+                equipment: [
+                    { name: "X-Ray Machine", quantity: 2 },
+                    { name: "Ultrasound", quantity: 1 }
+                ]
+            },
+             {
+                hospitalId: "23",
+                name: "Children's Hospital of Eastern Ontario (CHEO)",
+                address: "401 Smyth Rd, Ottawa, ON K1H 8L1",
+                latitude: 45.4018,
+                longitude: -75.6715,
+                contact: "613-737-7600",
+                equipment: [
+                    {name: "MRI Machine", quantity: 2},
+                    {name: "CT Scanner", quantity: 3},
+                    {name: "Pediatric Intensive Care Unit (PICU)", quantity: 20},
+                    {name: "Neonatal Intensive Care Unit (NICU)", quantity: 25}
+                ]
+            },
+            {
+                hospitalId: "24",
+                name: "Carleton Place and District Memorial Hospital",
+                address: "211 Lake Ave E, Carleton Place, ON K7C 1J4",
+                latitude: 45.1334,
+                longitude: -76.1472,
+                contact: "613-257-1500",
+                equipment: [
+                    { name: "X-Ray Machine", quantity: 2 },
+                    { name: "Ultrasound", quantity: 1 },
+                ]
+            }
+        ];
+
+        const map = L.map('map').setView([43.651070, -79.347015], 7);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        const hospitalListElement = document.getElementById('hospital-list');
+        const equipmentFilter = document.getElementById('equipment-filter');
+        const locationFilter = document.getElementById('location-filter');
+        const noResultsMessage = document.getElementById('no-results');
+        const modal = document.getElementById('hospitalModal');
+        const modalClose = document.querySelector('.close');
+
+
+        let activeMarker = null; // Keep track of the active marker
+
+
+        function createHospitalCard(hospital) {
+            const card = document.createElement('div');
+            card.className = 'hospital-card';
+            card.innerHTML = `
+                <h2>${hospital.name}</h2>
+                <p>Address: ${hospital.address}</p>
+                 <p>Contact: ${hospital.contact}</p>
+                <button data-hospital-id="${hospital.hospitalId}">View Details</button>
+            `;
+            const viewDetailsButton = card.querySelector('button');
+            viewDetailsButton.addEventListener('click', () => showHospitalDetails(hospital.hospitalId));
+            return card;
+        }
+
+        function updateHospitalList(filteredHospitals) {
+            hospitalListElement.innerHTML = '';
+            if (filteredHospitals.length === 0) {
+                noResultsMessage.style.display = 'block';
+            } else {
+                noResultsMessage.style.display = 'none';
+                filteredHospitals.forEach(hospital => {
+                    hospitalListElement.appendChild(createHospitalCard(hospital));
+                });
+            }
+        }
+
+        function updateMap(filteredHospitals) {
+            map.eachLayer(layer => {
+                if (layer instanceof L.Marker) {
+                    map.removeLayer(layer);
+                }
+            });
+
+            filteredHospitals.forEach(hospital => {
+                const marker = L.marker([hospital.latitude, hospital.longitude])
+                    .addTo(map)
+                    .bindPopup(`<b>${hospital.name}</b><br>${hospital.address}`);
+                marker.on('click', () => showHospitalDetails(hospital.hospitalId)); //show details on marker click
+            });
+        }
+
+
+
+        function filterHospitals() {
+            const selectedEquipment = equipmentFilter.value;
+            const location = locationFilter.value.toLowerCase();
+
+            let filteredHospitals = hospitals;
+
+            if (selectedEquipment) {
+                filteredHospitals = filteredHospitals.filter(hospital =>
+                    hospital.equipment.some(item => item.name === selectedEquipment)
+                );
+            }
+
+            if (location) {
+                filteredHospitals = filteredHospitals.filter(hospital =>
+                    hospital.address.toLowerCase().includes(location) || hospital.name.toLowerCase().includes(location)
+                );
+            }
+
+            updateHospitalList(filteredHospitals);
+            updateMap(filteredHospitals);
+        }
+
+        // Populate equipment filter
+        const equipmentOptions = [...new Set(hospitals.flatMap(hospital => hospital.equipment.map(item => item.name)))];
+        equipmentOptions.forEach(equipment => {
+            const option = document.createElement('option');
+            option.value = equipment;
+            option.textContent = equipment;
+            equipmentFilter.appendChild(option);
+        });
+
+        // Event listeners for filtering
+        equipmentFilter.addEventListener('change', filterHospitals);
+        locationFilter.addEventListener('input', filterHospitals);
+
+        // Initial display
+        filterHospitals();
+
+
+
+        function showHospitalDetails(hospitalId) {
+            const hospital = hospitals.find(h => h.hospitalId === hospitalId);
+            if (!hospital) return;
+
+            modal.style.display = "block";
+            const modalContent = document.querySelector('.modal-content');
+            modalContent.querySelector('h2').textContent = hospital.name;
+            modalContent.querySelector('.modal-address').textContent = `Address: ${hospital.address}`;
+            modalContent.querySelector('.modal-contact-info').textContent = `Contact: ${hospital.contact}`;
+
+            // Clear previous equipment list
+            const equipmentList = modalContent.querySelector('.modal-equipment-list');
+            equipmentList.innerHTML = '';
+            hospital.equipment.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `${item.name}: ${item.quantity}`;
+                equipmentList.appendChild(li);
+            });
+
+            //update map
+            const modalMapContainer =  modalContent.querySelector('.modal-map-container');
+            if (modalMapContainer._leaflet_map) {
+                modalMapContainer._leaflet_map.remove();
+            }
+            const modalMap = L.map(modalMapContainer).setView([hospital.latitude, hospital.longitude], 15);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(modalMap);
+            L.marker([hospital.latitude, hospital.longitude]).addTo(modalMap).bindPopup(hospital.name);
+
+
+            if (activeMarker) {
+                activeMarker.closePopup();
+            }
+
+
+        }
+
+        modalClose.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
