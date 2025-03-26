@@ -699,8 +699,23 @@
                 equipmentList.appendChild(li);
             });
 
-            //update map
-            const modalMapContainer =  modalContent.querySelector('.modal-map-container');
+            // Clear previous procedure list
+            const procedureList = modalContent.querySelector('.modal-procedure-list');
+            procedureList.innerHTML = '';
+            if (hospital.procedure && hospital.procedure.length > 0) {
+                hospital.procedure.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item.name;
+                    procedureList.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.textContent = "No procedures available.";
+                procedureList.appendChild(li);
+            }
+
+            // Update map
+            const modalMapContainer = modalContent.querySelector('.modal-map-container');
             if (modalMapContainer._leaflet_map) {
                 modalMapContainer._leaflet_map.remove();
             }
@@ -708,12 +723,9 @@
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(modalMap);
             L.marker([hospital.latitude, hospital.longitude]).addTo(modalMap).bindPopup(hospital.name);
 
-
             if (activeMarker) {
                 activeMarker.closePopup();
             }
-
-
         }
 
         modalClose.onclick = function() {
