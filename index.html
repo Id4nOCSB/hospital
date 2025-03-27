@@ -762,6 +762,14 @@
                 procedureList.appendChild(li);
             }
 
+            // Add website link
+            const websiteLink = modalContent.querySelector('.modal-website-link');
+            if (hospital.Website) {
+                websiteLink.innerHTML = `<a href="${hospital.Website}" target="_blank">${hospital.Website}</a>`;
+            } else {
+                websiteLink.textContent = "No website available.";
+            }
+
             // Update map
             const modalMapContainer = modalContent.querySelector('.modal-map-container');
             if (modalMapContainer._leaflet_map) {
