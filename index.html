@@ -435,8 +435,8 @@
         equipment: [
             { name: "X-Ray Machine", quantity: 2 },
             { name: "Ultrasound", quantity: 1 }
-        ],
-        procedures: ["Emergency Services", "General Surgery", "Diagnostic Imaging"]
+    ],
+        procedure: ["Emergency Services", "General Surgery", "Diagnostic Imaging"]
     },
     {
         hospitalId: "33",
@@ -449,7 +449,7 @@
             { name: "X-Ray Machine", quantity: 1 },
             { name: "Laboratory Services", quantity: 1 }
         ],
-        procedures: ["Emergency Services", "Primary Care", "Rehabilitation"]
+        procedure: ["Emergency Services", "Primary Care", "Rehabilitation"]
     },
     {
         hospitalId: "34",
@@ -462,7 +462,7 @@
             { name: "X-Ray Machine", quantity: 1 },
             { name: "Ultrasound", quantity: 1 }
         ],
-        procedures: ["Emergency Services", "Surgical Services", "Diagnostic Imaging"]
+        procedure: ["Emergency Services", "Surgical Services", "Diagnostic Imaging"]
     },
     {
         hospitalId: "35",
@@ -475,7 +475,7 @@
             { name: "X-Ray Machine", quantity: 2 },
             { name: "CT Scanner", quantity: 1 }
         ],
-        procedures: ["Emergency Services", "Acute Care", "Diagnostic Imaging"]
+        procedure: ["Emergency Services", "Acute Care", "Diagnostic Imaging"]
     },
     {
         hospitalId: "36",
@@ -488,7 +488,7 @@
             { name: "X-Ray Machine", quantity: 1 },
             { name: "Laboratory Services", quantity: 1 }
         ],
-        procedures: ["Emergency Services", "Primary Care", "Long-Term Care"]
+        procedure: ["Emergency Services", "Primary Care", "Long-Term Care"]
     },
     {
         hospitalId: "37",
@@ -501,7 +501,7 @@
             { name: "X-Ray Machine", quantity: 1 },
             { name: "Ultrasound", quantity: 1 }
         ],
-        procedures: ["Emergency Services", "Maternal Child Health", "Primary Care"]
+        procedure: ["Emergency Services", "Maternal Child Health", "Primary Care"]
     },
     {
         hospitalId: "38",
@@ -514,7 +514,7 @@
             { name: "X-Ray Machine", quantity: 1 },
             { name: "Laboratory Services", quantity: 1 }
         ],
-        procedures: ["Emergency Services", "Acute Care", "Long-Term Care"]
+        procedure: ["Emergency Services", "Acute Care", "Long-Term Care"]
     },
     {
         hospitalId: "39",
@@ -527,7 +527,7 @@
             { name: "X-Ray Machine", quantity: 1 },
             { name: "Laboratory Services", quantity: 1 }
         ],
-        procedures: ["Emergency Services", "Primary Care", "Rehabilitation"]
+        procedure: ["Emergency Services", "Primary Care", "Rehabilitation"]
     },
     {
         hospitalId: "40",
@@ -540,7 +540,7 @@
             { name: "X-Ray Machine", quantity: 1 },
             { name: "Ultrasound", quantity: 1 }
         ],
-        procedures: ["Emergency Services", "Acute Care", "Diagnostic Imaging"]
+        procedure: ["Emergency Services", "Acute Care", "Diagnostic Imaging"]
     },
     {
         hospitalId: "41",
@@ -553,9 +553,10 @@
             { name: "X-Ray Machine", quantity: 1 },
             { name: "Laboratory Services", quantity: 1 }
         ],
-        procedures: ["Emergency Services", "Primary Care", "Rehabilitation"]
+        procedure: ["Emergency Services", "Primary Care", "Rehabilitation"]
     }
-];
+]
+        ];
 
         const map = L.map('map').setView([43.651070, -79.347015], 7);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
