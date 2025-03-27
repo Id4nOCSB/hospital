@@ -553,7 +553,73 @@
                     { name: "Laboratory Services", quantity: 1 }
                 ],
                 procedure: ["Emergency Services", "Primary Care", "Rehabilitation"]
-            }
+            },
+            [
+    // ... (Your existing hospital data) ...
+
+    {
+        hospitalId: "42",
+        name: "North Bay Regional Health Centre",
+        address: "50 College Dr, North Bay, ON P1B 5A4",
+        latitude: 46.3113,
+        longitude: -79.4475,
+        contact: "705-474-8600",
+        equipment: [
+            { name: "General Surgery Equipment", quantity: 1 },
+            { name: "Dental Surgery Equipment", quantity: 1 },
+            { name: "ENT Equipment", quantity: 1 },
+            { name: "Orthopedic Equipment", quantity: 1 },
+            { name: "Urology Equipment", quantity: 1 },
+            { name: "Gynecology Equipment", quantity: 1 }
+        ],
+        procedures: ["Outpatient Surgical Procedures"]
+    },
+    {
+        hospitalId: "43",
+        name: "Health Sciences North",
+        address: "41 Ramsey Lake Rd, Sudbury, ON P3E 5J1",
+        latitude: 46.4678,
+        longitude: -80.9964,
+        contact: "705-523-7100",
+        equipment: [
+            { name: "MRI Machine", quantity: 2 },
+            { name: "Ultrasound", quantity: 2 },
+            { name: "Cardiac Care Equipment", quantity: 1 },
+            { name: "Oncology Equipment", quantity: 1 },
+            { name: "Pediatric Equipment", quantity: 1 },
+            { name: "Nephrology Equipment", quantity: 1 },
+            { name: "Trauma Equipment", quantity: 1 },
+            { name: "Rehabilitation Equipment", quantity: 1 }
+        ],
+        procedures: ["Ultrasound Procedures"]
+    },
+    {
+        hospitalId: "44",
+        name: "Cornwall Community Hospital",
+        address: "840 McConnell Avenue, Cornwall, ON K6H 5S5",
+        latitude: 45.0275,
+        longitude: -74.7400,
+        contact: "613-938-4240",
+        equipment: [
+            { name: "Operating Room Equipment", quantity: 6 }
+        ],
+        procedures: ["Breast Surgery", "ENT Surgery", "Endoscopy", "General Surgery", "Ophthalmology", "Orthopedic Surgery", "Pediatric Dental Surgery", "Plastic Surgery", "Trauma Surgery", "Urology"]
+    },
+    {
+        hospitalId: "45",
+        name: "Glengarry Memorial Hospital",
+        address: "20260 County Road 43, Alexandria, ON K0C 1A0",
+        latitude: 45.3059,
+        longitude: -74.6441,
+        contact: "613-525-2222",
+        equipment: [
+            { name: "Standard Ward Equipment", quantity: 1 },
+            { name: "Semi-Private Room Equipment", quantity: 1 },
+            { name: "Private Room Equipment", quantity: 1 }
+        ],
+        procedures: ["Ambulance Services", "Spiritual Care", "Telephone Services", "TV Services"]
+    }
+]
         ];
 
         const map = L.map('map').setView([43.651070, -79.347015], 7);
