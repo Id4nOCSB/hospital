@@ -548,7 +548,7 @@
             if (hospital.procedure && hospital.procedure.length > 0) {
                 hospital.procedure.forEach(item => {
                     const li = document.createElement('li');
-                    li.textContent = item.name;
+                    li.textContent = item;
                     procedureList.appendChild(li);
                 });
             } else {
