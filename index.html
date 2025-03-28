@@ -1563,14 +1563,21 @@
                 websiteLink.textContent = "No website available.";
             }
 
-            // Update map
+            // Update modal map
             const modalMapContainer = modalContent.querySelector('.modal-map-container');
+
+            // Remove the previous map instance if it exists
             if (modalMapContainer._leaflet_map) {
                 modalMapContainer._leaflet_map.remove();
             }
+
+            // Create a new map instance for the selected hospital
             const modalMap = L.map(modalMapContainer).setView([hospital.latitude, hospital.longitude], 15);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(modalMap);
             L.marker([hospital.latitude, hospital.longitude]).addTo(modalMap).bindPopup(hospital.name);
+
+            // Store the map instance in the container for future reference
+            modalMapContainer._leaflet_map = modalMap;
 
             if (activeMarker) {
                 activeMarker.closePopup();
