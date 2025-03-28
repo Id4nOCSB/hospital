@@ -1201,7 +1201,6 @@ equipment: [
         const map = L.map('map').setView([43.651070, -79.347015], 7);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-
         const hospitalListElement = document.getElementById('hospital-list');
         const equipmentFilter = document.getElementById('equipment-filter');
         const locationFilter = document.getElementById('location-filter');
@@ -1253,8 +1252,6 @@ equipment: [
                 marker.on('click', () => showHospitalDetails(hospital.hospitalId)); //show details on marker click
             });
         }
-
-
 
         function filterHospitals() {
             const selectedEquipment = equipmentFilter.value;
