@@ -1664,23 +1664,37 @@
         function processQuery(query) {
             const responseElement = document.getElementById("ai-response");
 
-            // Example: Parse the query for keywords
-            const locationMatch = query.match(/near (.+)/i);
-            const equipmentMatch = query.match(/with (.+)/i);
+            // Normalize the query to lowercase for easier matching
+            const normalizedQuery = query.toLowerCase();
+
+            // Extract keywords for location and equipment
+            const locationMatch = normalizedQuery.match(/near (.+)/i) || normalizedQuery.match(/in (.+)/i);
+            const equipmentMatch = normalizedQuery.match(/with (.+)/i) || normalizedQuery.match(/has (.+)/i);
+            const procedureMatch = normalizedQuery.match(/for (.+)/i) || normalizedQuery.match(/offers (.+)/i);
 
             let filteredHospitals = hospitals;
 
+            // Filter by location
             if (locationMatch) {
-                const location = locationMatch[1].toLowerCase();
+                const location = locationMatch[1].trim();
                 filteredHospitals = filteredHospitals.filter(hospital =>
                     hospital.address.toLowerCase().includes(location) || hospital.name.toLowerCase().includes(location)
                 );
             }
 
+            // Filter by equipment
             if (equipmentMatch) {
-                const equipment = equipmentMatch[1].toLowerCase();
+                const equipment = equipmentMatch[1].trim();
                 filteredHospitals = filteredHospitals.filter(hospital =>
                     hospital.equipment.some(item => item.name.toLowerCase().includes(equipment))
+                );
+            }
+
+            // Filter by procedure
+            if (procedureMatch) {
+                const procedure = procedureMatch[1].trim();
+                filteredHospitals = filteredHospitals.filter(hospital =>
+                    hospital.procedure.some(item => item.toLowerCase().includes(procedure))
                 );
             }
 
