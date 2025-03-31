@@ -199,7 +199,13 @@
 
     <div id="map"></div>
     <div id="hospital-list"></div>
-     <div id="no-results" class="no-results" style="display:none;">No hospitals found matching your criteria.</div>
+    <div id="no-results" class="no-results" style="display:none;">No hospitals found matching your criteria.</div>
+
+    <div id="ai-assistant">
+        <input type="text" id="ai-input" placeholder="Ask me to find a hospital..." />
+        <button id="ai-voice-button">🎤</button>
+        <div id="ai-response"></div>
+    </div>
 
     <div id="hospitalModal" class="modal">
         <div class="modal-content">
@@ -1622,6 +1628,74 @@
                 readAloud(hospital);
             }
         });
+
+        // Handle text input
+        document.getElementById("ai-input").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                const query = event.target.value;
+                processQuery(query);
+            }
+        });
+
+        // Handle voice input
+        document.getElementById("ai-voice-button").addEventListener("click", function() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = "en-US";
+            recognition.start();
+
+            recognition.onresult = function(event) {
+                const query = event.results[0][0].transcript;
+                processQuery(query);
+            };
+
+            recognition.onerror = function() {
+                document.getElementById("ai-response").textContent = "Sorry, I couldn't understand that. Please try again.";
+            };
+        });
+
+        function speakResponse(text) {
+            if (!window.speechSynthesis) return;
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = "en-US";
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function processQuery(query) {
+            const responseElement = document.getElementById("ai-response");
+
+            // Example: Parse the query for keywords
+            const locationMatch = query.match(/near (.+)/i);
+            const equipmentMatch = query.match(/with (.+)/i);
+
+            let filteredHospitals = hospitals;
+
+            if (locationMatch) {
+                const location = locationMatch[1].toLowerCase();
+                filteredHospitals = filteredHospitals.filter(hospital =>
+                    hospital.address.toLowerCase().includes(location) || hospital.name.toLowerCase().includes(location)
+                );
+            }
+
+            if (equipmentMatch) {
+                const equipment = equipmentMatch[1].toLowerCase();
+                filteredHospitals = filteredHospitals.filter(hospital =>
+                    hospital.equipment.some(item => item.name.toLowerCase().includes(equipment))
+                );
+            }
+
+            // Display results
+            if (filteredHospitals.length > 0) {
+                const responseText = "Here are the hospitals I found:";
+                responseElement.innerHTML = responseText + "<br>" +
+                    filteredHospitals.map(hospital => `<p>${hospital.name} - ${hospital.address}</p>`).join("");
+                speakResponse(responseText);
+            } else {
+                const responseText = "Sorry, I couldn't find any hospitals matching your query.";
+                responseElement.textContent = responseText;
+                speakResponse(responseText);
+            }
+        }
     </script>
 </body>
 </html>
