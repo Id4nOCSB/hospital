@@ -199,13 +199,6 @@
 
     <div id="map"></div>
     <div id="hospital-list"></div>
-    <div id="no-results" class="no-results" style="display:none;">No hospitals found matching your criteria.</div>
-
-    <div id="ai-assistant">
-        <input type="text" id="ai-input" placeholder="Ask me to find a hospital..." />
-        <button id="ai-voice-button">🎤</button>
-        <div id="ai-response"></div>
-    </div>
 
     <div id="hospitalModal" class="modal">
         <div class="modal-content">
@@ -1698,17 +1691,7 @@
                 );
             }
 
-            // Display results
-            if (filteredHospitals.length > 0) {
-                const responseText = "Here are the hospitals I found:";
-                responseElement.innerHTML = responseText + "<br>" +
-                    filteredHospitals.map(hospital => `<p>${hospital.name} - ${hospital.address}</p>`).join("");
-                speakResponse(responseText);
-            } else {
-                const responseText = "Sorry, I couldn't find any hospitals matching your query.";
-                responseElement.textContent = responseText;
-                speakResponse(responseText);
-            }
+         
         }
     </script>
 </body>
