@@ -259,18 +259,18 @@
             },
             {
                 hospitalId: "3",
-                name: "Mount Sinai Hospital",
-                address: "600 University Ave, Toronto, ON M5G 1X5",
-                latitude: 43.6579,
-                longitude: -79.3915,
-                contact: "416-596-4200",
-                Website: "https://www.mountsinai.on.ca/",
+                name: "St. Joseph's Healthcare Hamilton",
+                address: "50 Charlton Ave E, Hamilton, ON L8N 4A6",
+                latitude: 43.2565,
+                longitude: -79.8711,
+                contact: "905-522-1155",
+                Website: "https://www.stjoes.ca/",
                 equipment: [
-                    { name: "MRI Machine", quantity: 1 },
-                    { name: "PET Scanner", quantity: 1 },
-                    { name: "Surgical Robot", quantity: 2 }
+                    { name: "MRI Machine", quantity: 2 },
+                    { name: "CT Scanner", quantity: 2 },
+                    { name: "X-Ray Machine", quantity: 3 }
                 ],
-                procedure: ["High-Risk Obstetrics", "Complex Surgery", "Geriatric Care", "Cancer Care"]
+                procedure: ["Mental Health Services", "Cardiac Care", "Trauma Care", "Rehabilitation"]
             },
             {
                 hospitalId: "4",
@@ -446,20 +446,6 @@
                     { name: "Ultrasound", quantity: 1 }
                 ],
                 procedure: ["Cardiology", "Neurology", "Obstetrics", "Oncology"]
-            },
-            {
-                hospitalId: "16",
-                name: "Muskoka Algonquin Healthcare - Huntsville District Memorial Hospital Site",
-                address: "100 Frank Miller Dr, Huntsville, ON P1H 1H3",
-                latitude: 45.3346,
-                longitude: -79.2155,
-                contact: "705-789-2311",
-                Website: "https://www.mahc.ca/",
-                equipment: [
-                    { name: "X-Ray Machine", quantity: 2 },
-                    { name: "Ultrasound", quantity: 1 }
-                ],
-                procedure: ["Emergency Services", "General Surgery", "Diagnostic Imaging"]
             },
             {
                 hospitalId: "17",
@@ -1022,17 +1008,19 @@
             },
             {
                 hospitalId: "54",
-                name: "Renfrew Victoria Hospital",
-                address: "499 Raglan St N, Renfrew, ON K7V 1P8",
-                latitude: 45.4746,
-                longitude: -76.6782,
-                contact: "613-432-4851",
-                Website: "https://www.renfrewhosp.com/",
+                name: "Rouge Valley Health System",
+                address: "2867 Ellesmere Rd, Scarborough, ON M1E 4B9",
+                latitude: 43.7695,
+                longitude: -79.1972,
+                contact: "416-438-2911",
+                Website: "https://www.rvh.on.ca/",
                 equipment: [
-                    { name: "X-Ray Machine", quantity: 1 },
-                    { name: "Ultrasound", quantity: 1 }
+                    { name: "MRI Machine", quantity: 2 },
+                    { name: "CT Scanner", quantity: 3 },
+                    { name: "X-Ray Machine", quantity: 4 },
+                    { name: "Ultrasound", quantity: 2 }
                 ],
-                procedure: ["Emergency Services", "Surgical Services", "Diagnostic Imaging"]
+                procedure: ["Emergency Services", "Cardiology", "Surgical Services", "Diagnostic Imaging"]
             },
             {
                 hospitalId: "55",
@@ -1621,7 +1609,6 @@
             // Speak the text
             window.speechSynthesis.speak(utterance);
         }
-
         // Add event listener for the "Read Aloud" button
         document.getElementById("read-aloud-button").addEventListener("click", () => {
             const hospitalId = document.querySelector(".modal-content h2").dataset.hospitalId;
