@@ -1429,6 +1429,14 @@
             }
         ];
 
+        // Remove duplicate hospitals based on `hospitalId`
+        const uniqueHospitals = hospitals.filter((hospital, index, self) =>
+            index === self.findIndex(h => h.hospitalId === hospital.hospitalId)
+        );
+
+        // Replace the original `hospitals` array with the unique list
+        console.log(uniqueHospitals);
+
         const map = L.map('map').setView([43.651070, -79.347015], 7);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
