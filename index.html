@@ -1683,7 +1683,7 @@
         chatbotToggle.addEventListener('click', () => {
             chatbotContainer.style.display = chatbotContainer.style.display === 'none' ? 'block' : 'none';
             if (!chatbotMessages.dataset.initialized) {
-                chatbotMessages.innerHTML = `<div class="message bot-message">Hello! Ask me about hospital.</div>`;
+                chatbotMessages.innerHTML = `<div class="message bot-message">Hello! Ask me about hospitals in Ontario. For example, you can ask about services, equipment, or contact information for a specific hospital.</div>`;
                 chatbotMessages.dataset.initialized = true; // Mark as initialized
             }
         });
@@ -1696,41 +1696,43 @@
                 chatbotInput.value = '';
                 chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
 
-                // Send the user query to the server
-                const botResponse = await fetchChatResponse(userMessage);
+                // Process the user query
+                const botResponse = processHospitalQuery(userMessage);
                 chatbotMessages.innerHTML += `<div class="message bot-message">${botResponse}</div>`;
                 chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
             }
         });
 
-        // Fetch response from the server
-        async function fetchChatResponse(query) {
-            try {
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        model: 'gpt-3.5-turbo',
-                        messages: [
-                            { role: 'system', content: 'You are a helpful assistant providing information about hospitals in Ontario.' },
-                            { role: 'user', content: query }
-                        ],
-                        max_tokens: 150
-                    })
-                });
+        // Process user query
+        function processHospitalQuery(query) {
+            query = query.toLowerCase();
 
-                if (!response.ok) {
-                    throw new Error(`Error: ${response.status}`);
+            // Check if the query mentions a specific hospital
+            const hospital = hospitals.find(h => query.includes(h.name.toLowerCase()));
+            if (hospital) {
+                if (query.includes('services') || query.includes('procedures')) {
+                    return `The services offered at ${hospital.name} include: ${hospital.procedure.join(', ')}.`;
+                } else if (query.includes('equipment')) {
+                    return `The equipment available at ${hospital.name} includes: ${hospital.equipment.map(item => `${item.name} (${item.quantity})`).join(', ')}.`;
+                } else if (query.includes('contact') || query.includes('phone')) {
+                    return `The contact information for ${hospital.name} is: ${hospital.contact}.`;
+                } else if (query.includes('address') || query.includes('location')) {
+                    return `The address of ${hospital.name} is: ${hospital.address}.`;
+                } else {
+                    return `Here is some information about ${hospital.name}:
+                        - Address: ${hospital.address}
+                        - Contact: ${hospital.contact}
+                        - Services: ${hospital.procedure.join(', ')}
+                        - Equipment: ${hospital.equipment.map(item => `${item.name} (${item.quantity})`).join(', ')}`;
                 }
-
-                const data = await response.json();
-                return data;
-            } catch (error) {
-                console.error('Error fetching chat response:', error);
-                return 'Sorry, I am having trouble connecting to the server. Please try again later.';
             }
+
+            // If no specific hospital is mentioned
+            if (query.includes('hospitals')) {
+                return `There are many hospitals in Ontario. Please specify a hospital name to get more details.`;
+            }
+
+            return `I'm sorry, I couldn't understand your question. Please ask about a specific hospital or its services, equipment, or contact information.`;
         }
     </script>
 </body>
