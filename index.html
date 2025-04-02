@@ -1683,7 +1683,7 @@
         chatbotToggle.addEventListener('click', () => {
             chatbotContainer.style.display = chatbotContainer.style.display === 'none' ? 'block' : 'none';
             if (!chatbotMessages.dataset.initialized) {
-                chatbotMessages.innerHTML = `<div class="message bot-message">Hello! Ask me about hospital wait times, services, or parking prices in Ontario.</div>`;
+                chatbotMessages.innerHTML = `<div class="message bot-message">Hello! Ask me about hospital.</div>`;
                 chatbotMessages.dataset.initialized = true; // Mark as initialized
             }
         });

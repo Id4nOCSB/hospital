@@ -1,56 +1,56 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const axios = require('axios');
-const cheerio = require('cheerio');
 const cors = require('cors');
+const axios = require('axios');
 
 const app = express();
 const PORT = 3000;
 
+// Middleware
 app.use(bodyParser.json());
 app.use(cors());
 
-// Endpoint to fetch hospital information
-app.post('/api/hospital-info', async (req, res) => {
-    const { url } = req.body;
+// Chatbot endpoint
+app.post('/api/chat', async (req, res) => {
+    const { query } = req.body;
 
-    if (!url) {
-        return res.status(400).send('URL is required');
+    if (!query) {
+        return res.status(400).send('Query is required');
     }
 
     try {
-        const response = await axios.get(url);
-        const $ = cheerio.load(response.data);
-
-        const hospitalName = $('h1').first().text().trim();
-        const contactInfo = $('.contact-info').text().trim();
-        const services = $('.services-list li').map((i, el) => $(el).text().trim()).get();
-
-        res.json({
-            name: hospitalName || 'Name not found',
-            contact: contactInfo || 'Contact info not found',
-            services: services.length > 0 ? services : ['Services not found']
+        // Example: Simulate a response from OpenAI API
+        const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+            model: 'gpt-3.5-turbo',
+            messages: [
+                { role: 'system', content: 'You are a helpful assistant providing information about hospitals in Ontario.' },
+                { role: 'user', content: query }
+            ],
+            max_tokens: 150
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer YOUR_OPENAI_API_KEY` // Replace with your OpenAI API key
+            }
         });
+
+        const botResponse = response.data.choices[0].message.content.trim();
+        res.json(botResponse);
     } catch (error) {
-        console.error('Error fetching hospital information:', error.message);
-        res.status(500).send('Error fetching hospital information');
+        console.error('Error fetching chatbot response:', error.message);
+        res.status(500).send('Error fetching chatbot response');
     }
 });
 
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-    console.log('Server is running on http://localhost:3000');
-});
-
-async function fetchHospitalInfo(url) {
+// Function to fetch chat response
+async function fetchChatResponse(query) {
     try {
-        const response = await fetch('http://localhost:3000/api/hospital-info', {
+        const response = await fetch('http://localhost:3000/api/chat', { 
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ url: "https://www.uhn.ca/OurHospitals/TGH" })
+            body: JSON.stringify({ query })
         });
 
         if (!response.ok) {
@@ -58,36 +58,14 @@ async function fetchHospitalInfo(url) {
         }
 
         const data = await response.json();
-        return `Hospital Name: ${data.name}\nContact: ${data.contact}\nServices: ${data.services.join(', ')}`;
+        return data;
     } catch (error) {
-        console.error('Error fetching hospital information:', error);
-        return 'Sorry, I am having trouble fetching information from the hospital website.';
+        console.error('Error fetching chat response:', error);
+        return 'Sorry, I am having trouble connecting to the server. Please try again later.';
     }
 }
 
-// Handle user input
-chatbotInput.addEventListener('keydown', async (e) => {
-    if (e.key === 'Enter' && chatbotInput.value.trim() !== '') {
-        const userMessage = chatbotInput.value.trim();
-        chatbotMessages.innerHTML += `<div class="message user-message">${userMessage}</div>`;
-        chatbotInput.value = '';
-        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-
-        let botResponse;
-
-        // Check if the user is asking for hospital information
-        if (userMessage.toLowerCase().includes('info about')) {
-            const hospital = hospitals.find(h => userMessage.toLowerCase().includes(h.name.toLowerCase()));
-            if (hospital && hospital.Website) {
-                botResponse = await fetchHospitalInfo(hospital.Website);
-            } else {
-                botResponse = 'Sorry, I could not find the hospital you are asking about. Please try again.';
-            }
-        } else {
-            botResponse = 'Sorry, I can only fetch information about hospitals. Please ask about a specific hospital.';
-        }
-
-        chatbotMessages.innerHTML += `<div class="message bot-message">${botResponse}</div>`;
-        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-    }
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
