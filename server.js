@@ -50,7 +50,7 @@ async function fetchHospitalInfo(url) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ url: "https://example-hospital.com" })
+            body: JSON.stringify({ url: "https://www.uhn.ca/OurHospitals/TGH" })
         });
 
         if (!response.ok) {
