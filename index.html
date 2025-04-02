@@ -1679,37 +1679,58 @@
         const chatbotMessages = document.getElementById('chatbot-messages');
         const chatbotInput = document.getElementById('chatbot-input');
 
+        // Toggle chatbot visibility
         chatbotToggle.addEventListener('click', () => {
             chatbotContainer.style.display = chatbotContainer.style.display === 'none' ? 'block' : 'none';
-            chatbotMessages.innerHTML = `<div class="message bot-message">Hello! Ask me about hospital wait times, services, or parking prices in Ontario.</div>`;
+            if (!chatbotMessages.dataset.initialized) {
+                chatbotMessages.innerHTML = `<div class="message bot-message">Hello! Ask me about hospital wait times, services, or parking prices in Ontario.</div>`;
+                chatbotMessages.dataset.initialized = true; // Mark as initialized
+            }
         });
 
-        chatbotInput.addEventListener('keydown', (e) => {
+        // Handle user input
+        chatbotInput.addEventListener('keydown', async (e) => {
             if (e.key === 'Enter' && chatbotInput.value.trim() !== '') {
                 const userMessage = chatbotInput.value.trim();
                 chatbotMessages.innerHTML += `<div class="message user-message">${userMessage}</div>`;
                 chatbotInput.value = '';
-                handleUserQuery(userMessage);
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+
+                // Send the user query to the server
+                const botResponse = await fetchChatResponse(userMessage);
+                chatbotMessages.innerHTML += `<div class="message bot-message">${botResponse}</div>`;
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
             }
         });
 
-        function handleUserQuery(query) {
-            let response = '';
+        // Fetch response from the server
+        async function fetchChatResponse(query) {
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-3.5-turbo',
+                        messages: [
+                            { role: 'system', content: 'You are a helpful assistant providing information about hospitals in Ontario.' },
+                            { role: 'user', content: query }
+                        ],
+                        max_tokens: 150
+                    })
+                });
 
-            if (query.toLowerCase().includes('wait time')) {
-                response = 'Fetching wait times...'; // Replace with API call
-            } else if (query.toLowerCase().includes('service')) {
-                response = 'Fetching available services...'; // Replace with API call
-            } else if (query.toLowerCase().includes('parking')) {
-                response = 'Fetching parking prices...'; // Replace with API call
-            } else {
-                response = 'Sorry, I didn’t quite understand that. Please ask about wait times, services, or parking prices.';
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error fetching chat response:', error);
+                return 'Sorry, I am having trouble connecting to the server. Please try again later.';
             }
-
-            setTimeout(() => {
-                chatbotMessages.innerHTML += `<div class="message bot-message">${response}</div>`;
-                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-            }, 1000);
         }
     </script>
 </body>
