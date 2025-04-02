@@ -2,27 +2,29 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
 const cheerio = require('cheerio');
+const cors = require('cors');
 
 const app = express();
 const PORT = 3000;
 
 app.use(bodyParser.json());
+app.use(cors());
 
 // Endpoint to fetch hospital information
 app.post('/api/hospital-info', async (req, res) => {
     const { url } = req.body;
 
-    try {
-        // Fetch the hospital website
-        const response = await axios.get(url);
+    if (!url) {
+        return res.status(400).send('URL is required');
+    }
 
-        // Load the HTML into Cheerio for scraping
+    try {
+        const response = await axios.get(url);
         const $ = cheerio.load(response.data);
 
-        // Example: Extract specific information (modify selectors based on the website structure)
-        const hospitalName = $('h1').first().text().trim(); // Example: Scrape the first <h1> tag
-        const contactInfo = $('.contact-info').text().trim(); // Example: Scrape a class named "contact-info"
-        const services = $('.services-list li').map((i, el) => $(el).text().trim()).get(); // Example: Scrape a list of services
+        const hospitalName = $('h1').first().text().trim();
+        const contactInfo = $('.contact-info').text().trim();
+        const services = $('.services-list li').map((i, el) => $(el).text().trim()).get();
 
         res.json({
             name: hospitalName || 'Name not found',
@@ -30,7 +32,7 @@ app.post('/api/hospital-info', async (req, res) => {
             services: services.length > 0 ? services : ['Services not found']
         });
     } catch (error) {
-        console.error('Error fetching hospital information:', error);
+        console.error('Error fetching hospital information:', error.message);
         res.status(500).send('Error fetching hospital information');
     }
 });
@@ -38,6 +40,7 @@ app.post('/api/hospital-info', async (req, res) => {
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
+    console.log('Server is running on http://localhost:3000');
 });
 
 async function fetchHospitalInfo(url) {
@@ -47,7 +50,7 @@ async function fetchHospitalInfo(url) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ url })
+            body: JSON.stringify({ url: "https://example-hospital.com" })
         });
 
         if (!response.ok) {
