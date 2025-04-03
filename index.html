@@ -10,6 +10,14 @@
             font-family: sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #ffffff; /* Default light mode background */
+            color: #000000; /* Default light mode text color */
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode {
+            background-color: #121212; /* Dark mode background */
+            color: #ffffff; /* Dark mode text color */
         }
 
         h1 {
@@ -48,16 +56,25 @@
         }
 
         .hospital-card {
-            border: 1px solid #ffffff;
+            border: 1px solid #cccccc;
             padding: 15px;
             margin: 10px;
             border-radius: 5px;
-            background-color: #ffffff;
-            transition: background-color 0.3s ease;
+            background-color: #ffffff; /* Default light mode card background */
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         .hospital-card:hover {
-            background-color: #f0f0f0;
+            background-color: #f0f0f0; /* Slightly lighter background on hover */
+        }
+
+        body.dark-mode .hospital-card {
+            background-color: #1e1e1e; /* Match dark mode background */
+            border-color: #333333; /* Dark mode border color */
+        }
+
+        body.dark-mode .hospital-card:hover {
+            background-color: #2a2a2a; /* Slightly lighter background on hover in dark mode */
         }
 
         #hospital-list {
@@ -184,55 +201,72 @@
             margin-top: 10px;
         }
 
-        /* Chatbot styling */
-        #chatbot-container {
+        /* Dark/Light mode toggle button */
+        #theme-toggle {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 300px;
-            height: 400px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            display: none;
-        }
-
-        #chatbot-header {
-            background-color: #007bff;
-            color: white;
-            padding: 10px;
-            text-align: center;
-            font-size: 18px;
-        }
-
-        #chatbot-messages {
-            padding: 10px;
-            height: 250px;
-            overflow-y: auto;
-        }
-
-        #chatbot-input {
-            padding: 10px;
-            width: 100%;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: #ffffff; /* Default light mode background */
             border: none;
-            border-top: 1px solid #ddd;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            z-index: 1000;
         }
 
-        .message {
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 10px;
+        #theme-toggle:hover {
+            transform: scale(1.1);
         }
 
-        .user-message {
-            background-color: #007bff;
-            color: white;
-            text-align: right;
+        #theme-toggle img {
+            width: 24px;
+            height: 24px;
+            transition: filter 0.3s ease;
         }
 
-        .bot-message {
-            background-color: #e1e1e1;
+        /* Adjust icon and button background for dark mode */
+        body.dark-mode #theme-toggle {
+            background-color: #121212; /* Match dark mode background */
+        }
+
+        body.dark-mode #theme-toggle img {
+            filter: invert(1); /* Invert icon color for visibility */
+        }
+
+        /* Dark mode styles */
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .hospital-card.dark-mode {
+            background-color: #1e1e1e;
+            border-color: #333333;
+        }
+
+        .hospital-card.dark-mode:hover {
+            background-color: #2a2a2a;
+        }
+
+        .modal-content.dark-mode {
+            background-color: #1e1e1e;
+            color: #151515;
+        }
+
+        #chatbot-container.dark-mode {
+            background-color: #1e1e1e;
+            color: #ffffff;
+        }
+
+        #chatbot-header.dark-mode {
+            background-color: #333333;
         }
     </style>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
@@ -282,6 +316,11 @@
         <div id="chatbot-messages"></div>
         <input type="text" id="chatbot-input" placeholder="Ask me about wait times, services, or parking...">
     </div>
+
+    <!-- Add the theme toggle button -->
+    <button id="theme-toggle">
+        <img id="theme-icon" src="https://cdn-icons-png.flaticon.com/512/1164/1164954.png" alt="Light Mode Icon">
+    </button>
 
     <script>
         // Sample hospital data (replace with your actual data)
@@ -1407,8 +1446,7 @@
             {
                 hospitalId: "75",
                 name: "Ross Memorial Hospital",
-                address: "10 Angeline St N, Lindsay, ON K9V 4M8",
-                latitude: 44.3573,
+                address: "10 Angeline St N, Lindsay, ON K9V 4M8",latitude: 44.3573,
                 longitude: -78.7406,
                 contact: "705-324-6111",
                 Website: "https://www.rmh.org/",
@@ -1477,10 +1515,25 @@
                     { name: "Ultrasound", quantity: 1 }
                 ],
                 procedure: ["Emergency Services", "Primary Care", "Diagnostic Imaging"]
+            },
+            {
+                hospitalId: "80",
+                name: "Glengarry Memorial Hospital",
+                address: "20260 County Rd 43, Alexandria, ON K0C 1A0",
+                latitude: 45.3056, 
+                longitude: -74.6440,
+                contact: "613-525-2222",
+                website: "http://www.hgmh.on.ca/",
+                equipment: [
+                    { name: "X-Ray Machine", quantity: 1 },
+                    { name: "Ultrasound", quantity: 1 },
+                    { name: "CT Scanner", quantity: 1 },
+                    { name: "MRI Machine", quantity: 1 },
+                    { name: "Pool", quantity: 1 }
+                ],
+                procedure: ["Emergency Services", "Surgical Services", "Diagnostic Imaging"]
             }
         ];
-
-        console.log(hospitals);
 
         const map = L.map('map').setView([43.651070, -79.347015], 7);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
@@ -1500,7 +1553,7 @@
             card.innerHTML = `
                 <h2>${hospital.name}</h2>
                 <p>Address: ${hospital.address}</p>
-                 <p>Contact: ${hospital.contact}</p>
+                <p>Contact: ${hospital.contact}</p>
                 <button data-hospital-id="${hospital.hospitalId}">View Details</button>
             `;
             const viewDetailsButton = card.querySelector('button');
@@ -1521,17 +1574,19 @@
         }
 
         function updateMap(filteredHospitals) {
+            // Remove existing markers
             map.eachLayer(layer => {
                 if (layer instanceof L.Marker) {
                     map.removeLayer(layer);
                 }
             });
 
+            // Add markers for filtered hospitals
             filteredHospitals.forEach(hospital => {
                 const marker = L.marker([hospital.latitude, hospital.longitude])
                     .addTo(map)
                     .bindPopup(`<b>${hospital.name}</b><br>${hospital.address}`);
-                marker.on('click', () => showHospitalDetails(hospital.hospitalId)); //show details on marker click
+                marker.on('click', () => showHospitalDetails(hospital.hospitalId)); // Show details on marker click
             });
         }
 
@@ -1685,57 +1740,30 @@
         chatbotToggle.addEventListener('click', () => {
             chatbotContainer.style.display = chatbotContainer.style.display === 'none' ? 'block' : 'none';
             if (!chatbotMessages.dataset.initialized) {
-                chatbotMessages.innerHTML = `<div class="message bot-message">Hello! Ask me about hospitals in Ontario. For example, you can ask about services, equipment, or contact information for a specific hospital.</div>`;
+                chatbotMessages.innerHTML = `<div class="message bot-message">Hello! Ask me about hospital wait times, services, or parking prices in Ontario.</div>`;
                 chatbotMessages.dataset.initialized = true; // Mark as initialized
             }
         });
 
-        // Handle user input
-        chatbotInput.addEventListener('keydown', async (e) => {
-            if (e.key === 'Enter' && chatbotInput.value.trim() !== '') {
-                const userMessage = chatbotInput.value.trim();
-                chatbotMessages.innerHTML += `<div class="message user-message">${userMessage}</div>`;
-                chatbotInput.value = '';
-                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-
-                // Process the user query
-                const botResponse = processHospitalQuery(userMessage);
-                chatbotMessages.innerHTML += `<div class="message bot-message">${botResponse}</div>`;
-                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-            }
-        });
-
-        // Process user query
-        function processHospitalQuery(query) {
-            query = query.toLowerCase();
-
-            // Check if the query mentions a specific hospital
-            const hospital = hospitals.find(h => query.includes(h.name.toLowerCase()));
-            if (hospital) {
-                if (query.includes('services') || query.includes('procedures')) {
-                    return `The services offered at ${hospital.name} include: ${hospital.procedure.join(', ')}.`;
-                } else if (query.includes('equipment')) {
-                    return `The equipment available at ${hospital.name} includes: ${hospital.equipment.map(item => `${item.name} (${item.quantity})`).join(', ')}.`;
-                } else if (query.includes('contact') || query.includes('phone')) {
-                    return `The contact information for ${hospital.name} is: ${hospital.contact}.`;
-                } else if (query.includes('address') || query.includes('location')) {
-                    return `The address of ${hospital.name} is: ${hospital.address}.`;
-                } else {
-                    return `Here is some information about ${hospital.name}:
-                        - Address: ${hospital.address}
-                        - Contact: ${hospital.contact}
-                        - Services: ${hospital.procedure.join(', ')}
-                        - Equipment: ${hospital.equipment.map(item => `${item.name} (${item.quantity})`).join(', ')}`;
-                }
-            }
-
-            // If no specific hospital is mentioned
-            if (query.includes('hospitals')) {
-                return `There are many hospitals in Ontario. Please specify a hospital name to get more details.`;
-            }
-
-            return `I'm sorry, I couldn't understand your question. Please ask about a specific hospital or its services, equipment, or contact information.`;
+       
+        // Check for saved theme preference in localStorage
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeIcon.src = 'https://cdn-icons-png.flaticon.com/512/1164/1164946.png'; // Moon icon
         }
+
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            const isDarkMode = body.classList.contains('dark-mode');
+
+            // Update the icon and button background dynamically
+            themeIcon.src = isDarkMode
+                ? 'https://cdn-icons-png.flaticon.com/512/1164/1164946.png' // Moon icon
+                : 'https://cdn-icons-png.flaticon.com/512/1164/1164954.png'; // Sun icon
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+        });
     </script>
 </body>
 </html>
