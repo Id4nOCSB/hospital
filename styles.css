@@ -4,3 +4,25 @@ body{
 .title{
     color:#5c6ac4
 }
+
+/* Default (Light Mode) Styles */
+.hospital-card {
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #ddd;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark Mode Styles */
+body.dark-mode .hospital-card {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    border-color: #333333;
+}
+
+/* Dark Mode for Body */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
