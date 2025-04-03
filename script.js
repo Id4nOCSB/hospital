@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
         body.classList.add('dark-mode');
-        themeIcon.src = 'https://cdn-icons-png.flaticon.com/512/1164/1164946.png'; // Moon icon
+        themeIcon.src = 'https://cdn-icons-png.flaticon.com/512/1164/1164946.png'; // Moon icon for dark mode
     }
 
     // Toggle theme on button click
@@ -26,8 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Update the icon and save the theme preference
         themeIcon.src = isDarkMode
-            ? 'https://cdn-icons-png.flaticon.com/512/1164/1164946.png' // Moon icon
-            : 'https://cdn-icons-png.flaticon.com/512/1164/1164954.png'; // Sun icon
+            ? 'https://cdn-icons-png.flaticon.com/512/1164/1164946.png' // Moon icon for dark mode
+            : 'https://cdn-icons-png.flaticon.com/512/1164/1164954.png'; // Sun icon for light mode
         localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
     });
 });
