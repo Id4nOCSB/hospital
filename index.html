@@ -16,8 +16,9 @@
         }
 
         body.dark-mode {
-            background-color: #121212; /* Dark mode background */
-            color: #ffffff; /* Dark mode text color */
+            background-color: #121212;
+            color: #ffffff;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         h1 {
@@ -69,12 +70,12 @@
         }
 
         body.dark-mode .hospital-card {
-            background-color: #1e1e1e; /* Match dark mode background */
-            border-color: #333333; /* Dark mode border color */
+            background-color: #1e1e1e;
+            border-color: #333333;
         }
 
         body.dark-mode .hospital-card:hover {
-            background-color: #2a2a2a; /* Slightly lighter background on hover in dark mode */
+            background-color: #2a2a2a;
         }
 
         #hospital-list {
@@ -257,7 +258,17 @@
 
         .modal-content.dark-mode {
             background-color: #1e1e1e;
-            color: #151515;
+            color: #ffffff;
+        }
+
+        body.dark-mode .modal-content {
+            background-color: #1e1e1e;
+            color: #ffffff;
+        }
+
+        body.dark-mode #chatbot-container {
+            background-color: #1e1e1e;
+            color: #ffffff;
         }
 
         #chatbot-container.dark-mode {
@@ -304,7 +315,7 @@
             <button id="read-aloud-button">Read Aloud</button>
         </div>
     </div>
-    <!-- Add the theme toggle button -->
+    <!-- Dark/Light mode toggle button -->
     <button id="theme-toggle">
         <img id="theme-icon" src="https://cdn-icons-png.flaticon.com/512/1164/1164954.png" alt="Light Mode Icon">
     </button>
