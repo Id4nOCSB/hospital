@@ -60,6 +60,14 @@ body {
     transition: filter 0.3s ease;
 }
 
+  /* Adjust icon and button background for dark mode */
+  body.dark-mode #theme-toggle {
+    background-color: #121212; /* Match dark mode background */
+}
+
+body.dark-mode #theme-toggle img {
+    filter: invert(1); /* Invert icon color for visibility */
+}
 /* Dark Mode Styles */
 body.dark-mode {
     background-color: #121212; /* Dark mode background */
