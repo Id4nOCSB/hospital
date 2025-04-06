@@ -116,6 +116,10 @@ document.addEventListener('DOMContentLoaded', () => {
     filterHospitals();
 
     function showHospitalDetails(hospitalId) {
+        const isDarkMode = body.classList.contains('dark-mode');
+        if (isDarkMode) {
+            modal.classList.add('dark-mode');
+        }
         const hospital = hospitals.find(h => h.hospitalId === hospitalId);
         if (!hospital) return;
 
@@ -188,7 +192,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Toggle theme on button click
     themeToggle.addEventListener('click', () => {
         body.classList.toggle('dark-mode');
-        modal.classList.toggle('dark-mode');
         const isDarkMode = body.classList.contains('dark-mode');
 
         // Update the icon and button background dynamically
