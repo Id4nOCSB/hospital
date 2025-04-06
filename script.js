@@ -121,14 +121,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         modal.style.display = "block";
 
-        // Add dark-mode class to modal if dark mode is active
-        if (body.classList.contains('dark-mode')) {
-            modal.classList.add('dark-mode');
-        } else {
-            modal.classList.remove('dark-mode');
-        }
+        
 
         const modalContent = document.querySelector('.modal-content');
+
+        // Add dark-mode class to modal if dark mode is active
+        if (body.classList.contains('dark-mode')) {
+            modalContent.classList.add('dark-mode');
+        } else {
+            modalContent.classList.remove('dark-mode');
+        }
+
         const hospitalNameElement = modalContent.querySelector('h2');
         hospitalNameElement.textContent = hospital.name;
         hospitalNameElement.dataset.hospitalId = hospitalId; // Store the hospitalId for TTS
