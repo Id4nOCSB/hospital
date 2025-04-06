@@ -116,14 +116,18 @@ document.addEventListener('DOMContentLoaded', () => {
     filterHospitals();
 
     function showHospitalDetails(hospitalId) {
-        const isDarkMode = body.classList.contains('dark-mode');
-        if (isDarkMode) {
-            modal.classList.add('dark-mode');
-        }
         const hospital = hospitals.find(h => h.hospitalId === hospitalId);
         if (!hospital) return;
 
         modal.style.display = "block";
+
+        // Add dark-mode class to modal if dark mode is active
+        if (body.classList.contains('dark-mode')) {
+            modal.classList.add('dark-mode');
+        } else {
+            modal.classList.remove('dark-mode');
+        }
+
         const modalContent = document.querySelector('.modal-content');
         const hospitalNameElement = modalContent.querySelector('h2');
         hospitalNameElement.textContent = hospital.name;
