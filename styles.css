@@ -285,10 +285,6 @@ body{
             background-color: #121212; /* Match dark mode background */
         }
 
-        body.dark-mode #theme-toggle img {
-            filter: invert(1); /* Invert icon color for visibility */
-        }
-
         /* Dark mode styles */
         body.dark-mode {
             background-color: #121212;
