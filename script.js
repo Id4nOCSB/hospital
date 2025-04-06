@@ -188,6 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Toggle theme on button click
     themeToggle.addEventListener('click', () => {
         body.classList.toggle('dark-mode');
+        modal.classList.toggle('dark-mode');
         const isDarkMode = body.classList.contains('dark-mode');
 
         // Update the icon and button background dynamically
