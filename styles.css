@@ -267,7 +267,7 @@ body{
             justify-content: center;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.3s ease;
-            z-index: 1000;
+            z-index: 1000; /* Ensure it stays on top of other elements */
         }
 
         #theme-toggle:hover {
@@ -282,7 +282,7 @@ body{
 
         /* Adjust icon and button background for dark mode */
         body.dark-mode #theme-toggle {
-            background-color: #121212; /* Match dark mode background */
+            background-color: #333333; /* Dark mode button background */
         }
 
         /* Dark mode styles */

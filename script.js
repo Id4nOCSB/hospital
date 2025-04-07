@@ -187,3 +187,12 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
     });
 });
+
+// CSS for theme toggle
+const style = document.createElement('style');
+style.textContent = `
+#theme-toggle {
+    z-index: 1000; /* Ensure it stays on top */
+}
+`;
+document.head.appendChild(style);
