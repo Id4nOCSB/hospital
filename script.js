@@ -193,13 +193,16 @@ document.addEventListener('DOMContentLoaded', () => {
         let utterance = null;
 
         readAloudButton.addEventListener('click', () => {
-            if (synth.speaking) {
+            if (synth.speaking && !synth.paused) {
+                // Pause the speech
                 synth.pause();
                 readAloudButton.textContent = 'Resume Reading';
             } else if (synth.paused) {
+                // Resume the speech
                 synth.resume();
                 readAloudButton.textContent = 'Pause Reading';
             } else {
+                // Start reading the modal content
                 const modalContent = document.querySelector('.modal-content');
                 const hospitalNameElement = modalContent.querySelector('h2');
                 const addressText = modalContent.querySelector('.modal-address').textContent;
@@ -212,12 +215,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const textToSpeak = `${hospitalNameElement.textContent}. ${addressText}. ${contactText}. ${websiteText}. ${equipmentHeading} ${equipmentItems}. ${procedureHeading} ${procedureItems}.`;
 
+                // Create a new utterance
                 utterance = new SpeechSynthesisUtterance(textToSpeak);
-                utterance.lang = 'en-CA';
-                utterance.rate = 0.9;
+                utterance.lang = 'en-CA'; // Set the language to Canadian English
+                utterance.rate = 0.9; // Adjust the speaking rate (0.1 to 1.0)
+
+                // Start speaking
                 synth.speak(utterance);
                 readAloudButton.textContent = 'Pause Reading';
 
+                // Reset button text when speech ends
                 utterance.onend = () => {
                     readAloudButton.textContent = 'Read Aloud';
                     utterance = null;
@@ -225,6 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     } else {
+        // Hide the button if Speech Synthesis is not supported
         readAloudButton.style.display = 'none';
         console.log('Text-to-speech not supported in this browser.');
     }
