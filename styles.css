@@ -116,16 +116,19 @@ body{
 
         /* Modal Content */
         .modal-content {
-            background-color: #ffffff;
-            margin: 10% auto; /* 15% from the top and centered */
-            padding: 20px;
+            background-color: #ffffff; /* Light mode background */
+            color: #000000; /* Light mode text color */
             border: 1px solid #888;
-            width: 90%; /* Could be more or less, depending on screen size */
-            max-width: 600px;
             border-radius: 8px;
-            position: relative;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            animation: fadeIn 0.3s;
+            padding: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode .modal-content {
+            background-color: #1e1e1e; /* Dark mode background */
+            color: #ffffff; /* Dark mode text color */
+            border-color: #444444;
         }
 
         @keyframes fadeIn {
