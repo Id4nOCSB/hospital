@@ -12,6 +12,7 @@
 <body>
     <h1>Ontario Hospital Resources</h1>
 
+    <!-- Controls for filtering -->
     <div id="controls">
         <select id="equipment-filter">
             <option value="">All Equipment</option>
@@ -19,34 +20,39 @@
         <input type="text" id="location-filter" placeholder="Enter location...">
     </div>
 
+    <!-- Map container -->
     <div id="map"></div>
+
+    <!-- Hospital list container -->
     <div id="hospital-list"></div>
     <div id="no-results" class="no-results" style="display:none;">No hospitals found matching your criteria.</div>
 
+    <!-- Modal for hospital details -->
     <div id="hospitalModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Hospital Name</h2>
-            <div class="modal-map-container"></div>
+            <div class="modal-map-container" style="height: 200px; width: 100%;"></div>
             <p class="modal-address">Address:</p>
             <p class="modal-contact-info">Contact:</p>
-            <p class="modal-website-link"></p>
             <h3>Website:</h3>
-            <ul class="modal-website-list"></ul>
+            <p class="modal-website-link"><a href="#" target="_blank">Not Available</a></p>
             <h3>Equipment:</h3>
-            <ul class="modal-equipment-list"></ul>
+            <ul class="modal-equipment-list">
+                <!-- Equipment items will be dynamically added here -->
+            </ul>
             <h3>Procedures:</h3>
-            <ul class="modal-procedure-list"></ul>
+            <ul class="modal-procedure-list">
+                <!-- Procedure items will be dynamically added here -->
+            </ul>
             <!-- Add the Read Aloud button -->
             <button id="read-aloud-button">Read Aloud</button>
         </div>
     </div>
 
-    <!-- Add the theme toggle button -->
+    <!-- Theme toggle button -->
     <button id="theme-toggle">
         <img id="theme-icon" src="https://cdn-icons-png.flaticon.com/512/1164/1164946.png" alt="Light Mode Icon">
     </button>
-
-
 </body>
 </html>

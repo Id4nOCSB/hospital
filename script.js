@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             hospitals = data;
-            initializeApp(); // Call your app initialization logic
+            initializeApp();
         })
         .catch(error => {
             console.error('Error loading hospital data:', error);
@@ -41,8 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('hospitalModal');
     const modalClose = document.querySelector('.close');
 
-    let activeMarker = null; // Keep track of the active marker
-
     function createHospitalCard(hospital) {
         const card = document.createElement('div');
         card.className = 'hospital-card';
@@ -52,8 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <p>Contact: ${hospital.contact}</p>
             <button data-hospital-id="${hospital.hospitalId}">View Details</button>
         `;
-        const viewDetailsButton = card.querySelector('button');
-        viewDetailsButton.addEventListener('click', () => showHospitalDetails(hospital.hospitalId));
+        card.querySelector('button').addEventListener('click', () => showHospitalDetails(hospital.hospitalId));
         return card;
     }
 
@@ -82,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const marker = L.marker([hospital.latitude, hospital.longitude])
                 .addTo(map)
                 .bindPopup(`<b>${hospital.name}</b><br>${hospital.address}`);
-            marker.on('click', () => showHospitalDetails(hospital.hospitalId)); // Show details on marker click
+            marker.on('click', () => showHospitalDetails(hospital.hospitalId));
         });
     }
 
@@ -112,34 +109,18 @@ document.addEventListener('DOMContentLoaded', () => {
     equipmentFilter.addEventListener('change', filterHospitals);
     locationFilter.addEventListener('input', filterHospitals);
 
-    // Initial display
-    filterHospitals();
-
     function showHospitalDetails(hospitalId) {
         const hospital = hospitals.find(h => h.hospitalId === hospitalId);
         if (!hospital) return;
 
         modal.style.display = "block";
 
-        
-
         const modalContent = document.querySelector('.modal-content');
-
-        // Add dark-mode class to modal if dark mode is active
-        if (body.classList.contains('dark-mode')) {
-            modalContent.classList.add('dark-mode');
-        } else {
-            modalContent.classList.remove('dark-mode');
-        }
-
-        const hospitalNameElement = modalContent.querySelector('h2');
-        hospitalNameElement.textContent = hospital.name;
-        hospitalNameElement.dataset.hospitalId = hospitalId; // Store the hospitalId for TTS
-
+        modalContent.querySelector('h2').textContent = hospital.name;
         modalContent.querySelector('.modal-address').textContent = `Address: ${hospital.address}`;
         modalContent.querySelector('.modal-contact-info').textContent = `Contact: ${hospital.contact}`;
 
-        // Clear and populate equipment list
+        // Populate equipment list
         const equipmentList = modalContent.querySelector('.modal-equipment-list');
         equipmentList.innerHTML = '';
         hospital.equipment.forEach(item => {
@@ -148,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
             equipmentList.appendChild(li);
         });
 
-        // Clear and populate procedure list
+        // Populate procedure list
         const procedureList = modalContent.querySelector('.modal-procedure-list');
         procedureList.innerHTML = '';
         hospital.procedure.forEach(item => {
@@ -159,11 +140,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Add website link
         const websiteLink = modalContent.querySelector('.modal-website-link');
-        if (hospital.website) {
-            websiteLink.innerHTML = `<a href="${hospital.website}" target="_blank">${hospital.website}</a>`;
-        } else {
-            websiteLink.textContent = "No website available.";
-        }
+        websiteLink.innerHTML = hospital.website
+            ? `<a href="${hospital.website}" target="_blank">${hospital.website}</a>`
+            : "No website available.";
 
         // Update modal map
         const modalMapContainer = modalContent.querySelector('.modal-map-container');
@@ -176,35 +155,77 @@ document.addEventListener('DOMContentLoaded', () => {
         modalMapContainer._leaflet_map = modalMap;
     }
 
-    modalClose.onclick = function() {
+    modalClose.onclick = () => {
         modal.style.display = "none";
     };
 
-    window.onclick = function(event) {
+    window.onclick = event => {
         if (event.target === modal) {
             modal.style.display = "none";
         }
     };
+
+    // Dark/Light mode toggle
     const themeToggle = document.getElementById('theme-toggle');
     const themeIcon = document.getElementById('theme-icon');
     const body = document.body;
 
-    // Check for saved theme preference in localStorage
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
         body.classList.add('dark-mode');
-        themeIcon.src = 'https://cdn-icons-png.flaticon.com/512/1164/1164954.png'; // Moon icon
+        themeIcon.src = 'https://cdn-icons-png.flaticon.com/512/1164/1164954.png';
     }
 
-    // Toggle theme on button click
     themeToggle.addEventListener('click', () => {
         body.classList.toggle('dark-mode');
         const isDarkMode = body.classList.contains('dark-mode');
-
-        // Update the icon and button background dynamically
         themeIcon.src = isDarkMode
-            ? 'https://cdn-icons-png.flaticon.com/512/1164/1164954.png' // Moon icon
-            : 'https://cdn-icons-png.flaticon.com/512/1164/1164946.png'; // Sun icon
+            ? 'https://cdn-icons-png.flaticon.com/512/1164/1164954.png'
+            : 'https://cdn-icons-png.flaticon.com/512/1164/1164946.png';
         localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
     });
+
+    // Read Aloud functionality
+    const readAloudButton = document.getElementById('read-aloud-button');
+
+    if ('speechSynthesis' in window) {
+        const synth = window.speechSynthesis;
+        let utterance = null;
+
+        readAloudButton.addEventListener('click', () => {
+            if (synth.speaking) {
+                synth.pause();
+                readAloudButton.textContent = 'Resume Reading';
+            } else if (synth.paused) {
+                synth.resume();
+                readAloudButton.textContent = 'Pause Reading';
+            } else {
+                const modalContent = document.querySelector('.modal-content');
+                const hospitalNameElement = modalContent.querySelector('h2');
+                const addressText = modalContent.querySelector('.modal-address').textContent;
+                const contactText = modalContent.querySelector('.modal-contact-info').textContent;
+                const websiteText = modalContent.querySelector('.modal-website-link').textContent === 'No website available.' ? '' : `Website: ${modalContent.querySelector('.modal-website-link a')?.textContent || ''}`;
+                const equipmentHeading = modalContent.querySelector('.modal-equipment-list').previousElementSibling.textContent + ': ';
+                const equipmentItems = Array.from(modalContent.querySelectorAll('.modal-equipment-list li')).map(li => li.textContent).join(', ');
+                const procedureHeading = modalContent.querySelector('.modal-procedure-list').previousElementSibling.textContent + ': ';
+                const procedureItems = Array.from(modalContent.querySelectorAll('.modal-procedure-list li')).map(li => li.textContent).join(', ');
+
+                const textToSpeak = `${hospitalNameElement.textContent}. ${addressText}. ${contactText}. ${websiteText}. ${equipmentHeading} ${equipmentItems}. ${procedureHeading} ${procedureItems}.`;
+
+                utterance = new SpeechSynthesisUtterance(textToSpeak);
+                utterance.lang = 'en-CA';
+                utterance.rate = 0.9;
+                synth.speak(utterance);
+                readAloudButton.textContent = 'Pause Reading';
+
+                utterance.onend = () => {
+                    readAloudButton.textContent = 'Read Aloud';
+                    utterance = null;
+                };
+            }
+        });
+    } else {
+        readAloudButton.style.display = 'none';
+        console.log('Text-to-speech not supported in this browser.');
+    }
 });
