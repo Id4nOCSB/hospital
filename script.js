@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         equipmentList.innerHTML = '';
         hospital.equipment.forEach(item => {
             const li = document.createElement('li');
-            li.textContent = `${item.name}: ${item.quantity}`;
+            li.textContent = `${item.name}`;
             equipmentList.appendChild(li);
         });
 
@@ -196,3 +196,29 @@ style.textContent = `
 }
 `;
 document.head.appendChild(style);
+
+const fs = require('fs');
+
+// Load the JSON file
+const filePath = './hospital_data.json';
+const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+
+// Recursively remove 'quantity' fields from all equipment entries
+function removeQuantityFields(hospitals) {
+  return hospitals.map(hospital => {
+    if (hospital.equipment) {
+      hospital.equipment = hospital.equipment.map(item => {
+        delete item.quantity;
+        return item;
+      });
+    }
+    return hospital;
+  });
+}
+
+// Update the data
+const updatedData = removeQuantityFields(data);
+
+// Save the updated JSON back to the file
+fs.writeFileSync(filePath, JSON.stringify(updatedData, null, 2), 'utf8');
+console.log('All quantity fields have been removed.');
