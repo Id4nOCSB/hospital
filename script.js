@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const equipmentOptions = [...new Set(
             hospitals.flatMap(hospital => hospital.equipment ? hospital.equipment.map(item => item.name) : [])
         )];
+        console.log('Equipment options:', equipmentOptions); // Debugging
+
         equipmentOptions.forEach(equipment => {
             const option = document.createElement('option');
             option.value = equipment;
@@ -71,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 hospitalListElement.appendChild(createHospitalCard(hospital));
             });
         }
+        console.log('Updated hospital list:', filteredHospitals); // Debugging
     }
 
     function updateMap(filteredHospitals) {
