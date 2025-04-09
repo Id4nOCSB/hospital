@@ -203,22 +203,29 @@ const fs = require('fs');
 const filePath = './hospital_data.json';
 const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
 
-// Recursively remove 'quantity' fields from all equipment entries
-function removeQuantityFields(hospitals) {
-  return hospitals.map(hospital => {
-    if (hospital.equipment) {
-      hospital.equipment = hospital.equipment.map(item => {
-        delete item.quantity;
-        return item;
-      });
+// Function to flatten and clean the JSON
+function cleanHospitalData(hospitals) {
+    const cleanedData = [];
+
+    function processEntry(entry) {
+        if (Array.isArray(entry)) {
+            entry.forEach(processEntry);
+        } else if (entry && typeof entry === 'object') {
+            // Remove invalid fields
+            if (entry.equipment) {
+                entry.equipment = entry.equipment.map(item => ({ name: item.name }));
+            }
+            cleanedData.push(entry);
+        }
     }
-    return hospital;
-  });
+
+    processEntry(hospitals);
+    return cleanedData;
 }
 
-// Update the data
-const updatedData = removeQuantityFields(data);
+// Clean the data
+const cleanedData = cleanHospitalData(data);
 
-// Save the updated JSON back to the file
-fs.writeFileSync(filePath, JSON.stringify(updatedData, null, 2), 'utf8');
-console.log('All quantity fields have been removed.');
+// Save the cleaned JSON back to the file
+fs.writeFileSync(filePath, JSON.stringify(cleanedData, null, 2), 'utf8');
+console.log('Hospital data has been cleaned and flattened.');
