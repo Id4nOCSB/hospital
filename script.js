@@ -202,15 +202,6 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-const fs = require('fs');
-
-// Load the JSON file
-const filePath = './hospital_data.json';
-
-// Function to flatten and clean the JSON
-function cleanHospitalData(hospitals) {
-    const cleanedData = [];
-
     function processEntry(entry) {
         if (Array.isArray(entry)) {
             entry.forEach(processEntry);
