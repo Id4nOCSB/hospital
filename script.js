@@ -216,7 +216,6 @@ document.head.appendChild(style);
 
     processEntry(hospitals);
     return cleanedData;
-}
 
 // Save the cleaned JSON back to the file
 fs.writeFileSync(filePath, JSON.stringify(cleanedData, null, 2), 'utf8');
