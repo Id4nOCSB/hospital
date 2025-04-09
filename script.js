@@ -10,11 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json();
         })
         .then(data => {
-            hospitals = data;
-            initializeApp();
+            console.log(data); // Debugging: Check if the data is loaded correctly
+            hospitals = data; // Assign the loaded data to the hospitals variable
+            initializeApp(); // Initialize the app with the loaded data
         })
         .catch(error => {
-            console.error('Error loading hospital data:', error);
+            console.error('Error loading hospital data:', error); // Log any errors
         });
 
     function initializeApp() {
@@ -222,9 +223,6 @@ function cleanHospitalData(hospitals) {
     processEntry(hospitals);
     return cleanedData;
 }
-
-// Clean the data
-const cleanedData = cleanHospitalData(data);
 
 // Save the cleaned JSON back to the file
 fs.writeFileSync(filePath, JSON.stringify(cleanedData, null, 2), 'utf8');
