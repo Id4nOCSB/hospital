@@ -55,9 +55,11 @@ body{
         }
 
         .hospital-card {
+            max-width: 600px; /* Limit the maximum width of the card */
+            width: 100%; /* Ensure it adapts to smaller screens */
+            margin: 10px auto; /* Center the card horizontally */
             border: 1px solid #cccccc;
             padding: 15px;
-            margin: 10px;
             border-radius: 5px;
             background-color: #ffffff; /* Default light mode card background */
             transition: background-color 0.3s ease, border-color 0.3s ease;
@@ -67,6 +69,7 @@ body{
             background-color: #f0f0f0; /* Slightly lighter background on hover */
         }
 
+        /* Dark Mode Styles for Hospital Cards */
         body.dark-mode .hospital-card {
             background-color: #1e1e1e; /* Match dark mode background */
             border-color: #333333; /* Dark mode border color */

@@ -10,16 +10,25 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json();
         })
         .then(data => {
-            hospitals = data;
-            initializeApp();
+            console.log('Loaded data:', data); // Debugging: Check if the data is loaded correctly
+            hospitals = data; // Assign the loaded data to the hospitals variable
+            const cleanedHospitals = cleanData(hospitals);
+            console.log('Cleaned hospitals:', cleanedHospitals);
+            initializeApp(); // Initialize the app with the loaded data
         })
         .catch(error => {
-            console.error('Error loading hospital data:', error);
+            console.error('Error loading hospital data:', error); // Log any errors
         });
 
     function initializeApp() {
+        console.log('Initializing app with hospitals:', hospitals); // Debugging: Check the hospitals array
+
         // Populate equipment filter
-        const equipmentOptions = [...new Set(hospitals.flatMap(hospital => hospital.equipment.map(item => item.name)))];
+        const equipmentOptions = [...new Set(
+            hospitals.flatMap(hospital => hospital.equipment ? hospital.equipment.map(item => item.name) : [])
+        )];
+        console.log('Equipment options:', equipmentOptions); // Debugging
+
         equipmentOptions.forEach(equipment => {
             const option = document.createElement('option');
             option.value = equipment;
@@ -64,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 hospitalListElement.appendChild(createHospitalCard(hospital));
             });
         }
+        console.log('Updated hospital list:', filteredHospitals); // Debugging
     }
 
     function updateMap(filteredHospitals) {
@@ -101,6 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
             );
         }
 
+        console.log('Filtered hospitals:', filteredHospitals); // Debugging: Check the filtered hospitals
+
         updateHospitalList(filteredHospitals);
         updateMap(filteredHospitals);
     }
@@ -125,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
         equipmentList.innerHTML = '';
         hospital.equipment.forEach(item => {
             const li = document.createElement('li');
-            li.textContent = `${item.name}: ${item.quantity}`;
+            li.textContent = `${item.name}`;
             equipmentList.appendChild(li);
         });
 
@@ -196,3 +208,20 @@ style.textContent = `
 }
 `;
 document.head.appendChild(style);
+
+function cleanData(hospitals) {
+    const cleanedData = [];
+    function processEntry(entry) {
+        if (Array.isArray(entry)) {
+            entry.forEach(processEntry);
+        } else if (entry && typeof entry === 'object') {
+            // Remove invalid fields
+            if (entry.equipment) {
+                entry.equipment = entry.equipment.map(item => ({ name: item.name }));
+            }
+            cleanedData.push(entry);
+        }
+    }
+    processEntry(hospitals);
+    return cleanedData;
+}
