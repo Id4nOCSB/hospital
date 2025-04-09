@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json();
         })
         .then(data => {
-            console.log(data); // Debugging: Check if the data is loaded correctly
+            console.log('Loaded data:', data); // Debugging: Check if the data is loaded correctly
             hospitals = data; // Assign the loaded data to the hospitals variable
             initializeApp(); // Initialize the app with the loaded data
         })
@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
     function initializeApp() {
+        console.log('Initializing app with hospitals:', hospitals); // Debugging: Check the hospitals array
+
         // Populate equipment filter
         const equipmentOptions = [...new Set(hospitals.flatMap(hospital => hospital.equipment.map(item => item.name)))];
         equipmentOptions.forEach(equipment => {
@@ -101,6 +103,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 hospital.address.toLowerCase().includes(location) || hospital.name.toLowerCase().includes(location)
             );
         }
+
+        console.log('Filtered hospitals:', filteredHospitals); // Debugging: Check the filtered hospitals
 
         updateHospitalList(filteredHospitals);
         updateMap(filteredHospitals);
