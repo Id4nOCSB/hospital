@@ -24,7 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Initializing app with hospitals:', hospitals); // Debugging: Check the hospitals array
 
         // Populate equipment filter
-        const equipmentOptions = [...new Set(hospitals.flatMap(hospital => hospital.equipment.map(item => item.name)))];
+        const equipmentOptions = [...new Set(
+            hospitals.flatMap(hospital => hospital.equipment ? hospital.equipment.map(item => item.name) : [])
+        )];
         equipmentOptions.forEach(equipment => {
             const option = document.createElement('option');
             option.value = equipment;
