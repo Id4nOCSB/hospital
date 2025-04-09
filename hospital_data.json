@@ -1374,8 +1374,7 @@
           "procedure": [
             "General medical care",
             "Minor surgical procedures",
-            "Diagnostic imaging"
-          ]
+            "Diagnostic imaging"]
         },
         {
           "hospitalId": "92",
@@ -1393,8 +1392,7 @@
           "procedure": [
             "Emergency care",
             "Surgical procedures",
-            "Cancer care"
-          ]
+            "Cancer care"]
         },
         {
           "hospitalId": "93",
@@ -1424,8 +1422,8 @@
           "contact": "905-459-4740",
           "website": "https://trilliumhealthpartners.ca/our-hospitals/peel/Pages/peel.aspx",
           "equipment": [
-            { "name": "Mental Health Support Equipment", "quantity": null },
-            { "name": "Rehabilitation Equipment", "quantity": null }
+            { "name": "Mental Health Support Equipment", "quantity": 1 },
+            { "name": "Rehabilitation Equipment", "quantity": 1 }
           ],
           "procedure": [
             "Mental health services",
@@ -1803,7 +1801,7 @@
                               "contact": "705-457-1392",
                               "website": "https://www.hhhs.ca/",
                               "equipment": [
-                                { "name": "Basic Medical Equipment", "quantity": null }
+                                { "name": "Basic Medical Equipment", "quantity": 1 }
                               ],
                               "procedure": [
                                 "Acute care",
@@ -1819,7 +1817,7 @@
                               "contact": "705-286-2300",
                               "website": "https://www.hhhs.ca/",
                               "equipment": [
-                                { "name": "Basic Medical Equipment", "quantity": null }
+                                { "name": "Basic Medical Equipment", "quantity": 1 }
                               ],
                               "procedure": [
                                 "Acute care",
@@ -1835,7 +1833,7 @@
                               "contact": "613-525-2222",
                               "website": "https://glengarrymemorialhospital.ca/",
                               "equipment": [
-                                { "name": "Basic Medical Equipment", "quantity": null }
+                                { "name": "Basic Medical Equipment", "quantity": 1 }
                               ],
                               "procedure": [
                                 "Acute care",
@@ -1851,8 +1849,8 @@
                               "contact": "613-746-4621",
                               "website": "https://hopitalmontfort.ca/en",
                               "equipment": [
-                                { "name": "Advanced Diagnostic Imaging", "quantity": null },
-                                { "name": "Specialized Surgical Equipment", "quantity": null }
+                                { "name": "Advanced Diagnostic Imaging", "quantity": 1 },
+                                { "name": "Specialized Surgical Equipment", "quantity": 1 }
                               ],
                               "procedure": [
                                 "Academic health sciences",
@@ -1868,8 +1866,8 @@
                               "contact": "613-937-4900",
                               "website": "https://cornwallhospital.ca/",
                               "equipment": [
-                                { "name": "Complex Continuing Care Equipment", "quantity": null },
-                                { "name": "Rehabilitation Equipment", "quantity": null }
+                                { "name": "Complex Continuing Care Equipment", "quantity": 1 },
+                                { "name": "Rehabilitation Equipment", "quantity": 1 }
                               ],
                               "procedure": [
                                 "Complex continuing care",
@@ -1886,7 +1884,7 @@
                                   "contact": "905-420-8705",
                                   "website": "https://www.rougevalley.ca/locations/jerry-coughlan-health-wellness-centre/",
                                   "equipment": [
-                                    { "name": "Outpatient Clinic Equipment", "quantity": null }
+                                    { "name": "Outpatient Clinic Equipment", "quantity": 1 }
                                   ],
                                   "procedure": [
                                     "Outpatient services",
@@ -1902,7 +1900,7 @@
                                   "contact": "613-258-6133",
                                   "website": "https://kdh.on.ca/",
                                   "equipment": [
-                                    { "name": "Basic Medical Equipment", "quantity": null }
+                                    { "name": "Basic Medical Equipment", "quantity": 1 }
                                   ],
                                   "procedure": [
                                     "Acute care",
@@ -1918,8 +1916,8 @@
                                   "contact": "613-549-6666",
                                   "website": "https://kingstonhsc.ca/kingston-general-hospital",
                                   "equipment": [
-                                    { "name": "Advanced Surgical Equipment", "quantity": null },
-                                    { "name": "Specialized Diagnostic Units", "quantity": null }
+                                    { "name": "Advanced Surgical Equipment", "quantity": 1 },
+                                    { "name": "Specialized Diagnostic Units", "quantity": 1 }
                                   ],
                                   "procedure": [
                                     "Complex medical and surgical care",
@@ -1935,7 +1933,7 @@
                                   "contact": "613-352-3311",
                                   "website": "https://www.lacgh.napanee.on.ca/",
                                   "equipment": [
-                                    { "name": "Basic Medical Equipment", "quantity": null }
+                                    { "name": "Basic Medical Equipment", "quantity": 1 }
                                   ],
                                   "procedure": [
                                     "Acute care",
@@ -1951,8 +1949,8 @@
                                   "contact": "613-735-6838",
                                   "website": "https://marianhill.ca/",
                                   "equipment": [
-                                    { "name": "Long-term Care Equipment", "quantity": null },
-                                    { "name": "Rehabilitation Equipment", "quantity": null }
+                                    { "name": "Long-term Care Equipment", "quantity": 1 },
+                                    { "name": "Rehabilitation Equipment", "quantity": 1 }
                                   ],
                                   "procedure": [
                                     "Complex continuing care",
@@ -1969,7 +1967,7 @@
                                       "contact": "613-746-4621",
                                       "website": "https://hopitalmontfort.ca/en",
                                       "equipment": [
-                                        { "name": "Advanced Medical Technologies", "quantity": null }
+                                        { "name": "Advanced Medical Technologies", "quantity": 1 }
                                       ],
                                       "procedure": [
                                         "University hospital services",
@@ -1985,7 +1983,7 @@
                                       "contact": "613-332-2825",
                                       "website": "https://www.qhc.on.ca/north-hastings-hospital/",
                                       "equipment": [
-                                        { "name": "Basic Medical Equipment", "quantity": null }
+                                        { "name": "Basic Medical Equipment", "quantity": 1 }
                                       ],
                                       "procedure": [
                                         "Acute care",
@@ -2001,8 +1999,8 @@
                                       "contact": "905-372-6811",
                                       "website": "https://nhh.ca/",
                                       "equipment": [
-                                        { "name": "Diagnostic Imaging Services", "quantity": null },
-                                        { "name": "Surgical Facilities", "quantity": null }
+                                        { "name": "Diagnostic Imaging Services", "quantity": 1 },
+                                        { "name": "Surgical Facilities", "quantity": 1 }
                                       ],
                                       "procedure": [
                                         "Acute and chronic care",
@@ -2018,7 +2016,7 @@
                                       "contact": "905-472-7000",
                                       "website": "https://www.oakvalleyhealth.ca/locations-services/markham-stouffville-hospital/",
                                       "equipment": [
-                                        { "name": "Advanced Technology", "quantity": null }
+                                        { "name": "Advanced Technology", "quantity": 1 }
                                       ],
                                       "procedure": [
                                         "Comprehensive health services"
@@ -2040,10 +2038,8 @@
                                         "Community health programs"
                                       ]
                                     }
-                                  ]
                           ]
                       ]
                 ]           
           ]
-        ]
-    ]
+      ]
