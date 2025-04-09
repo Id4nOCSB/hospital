@@ -206,7 +206,6 @@ const fs = require('fs');
 
 // Load the JSON file
 const filePath = './hospital_data.json';
-const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
 
 // Function to flatten and clean the JSON
 function cleanHospitalData(hospitals) {
