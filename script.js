@@ -225,3 +225,39 @@ function cleanData(hospitals) {
     processEntry(hospitals);
     return cleanedData;
 }
+
+const fs = require('fs');
+
+// Load the JSON file
+const filePath = './hospital_data.json';
+const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+
+// Function to add missing quantity fields
+function addMissingQuantities(hospitals) {
+    function processEntry(entry) {
+        if (Array.isArray(entry)) {
+            entry.forEach(processEntry);
+        } else if (entry && typeof entry === 'object') {
+            if (entry.equipment) {
+                entry.equipment = entry.equipment.map(item => {
+                    if (!item.quantity) {
+                        item.quantity = 1; // Add quantity if missing
+                    }
+                    return item;
+                });
+            }
+            if (entry.procedure) {
+                entry.procedure = entry.procedure.map(proc => proc.trim());
+            }
+        }
+    }
+    processEntry(hospitals);
+    return hospitals;
+}
+
+// Add missing quantities
+const updatedData = addMissingQuantities(data);
+
+// Save the updated JSON back to the file
+fs.writeFileSync(filePath, JSON.stringify(updatedData, null, 2), 'utf8');
+console.log('Missing quantities have been added.');
