@@ -108,7 +108,7 @@ body{
             z-index: 1000; /* Sit on top */
             left: 0;
             top: 0;
-            width: 30%; /* Full width */
+            width: 100%; /* Full width */
             height: 100%; /* Full height */
             overflow: auto; /* Enable scroll if needed */
             background-color: rgba(255, 255, 255, 0.4); /* Black w/ opacity */
@@ -116,6 +116,10 @@ body{
 
         /* Modal Content */
         .modal-content {
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+            margin: 10% auto;
             background-color: #ffffff; /* Light mode background */
             color: #000000; /* Light mode text color */
             border: 1px solid #888;
@@ -181,9 +185,9 @@ body{
 
         .modal-procedure-list li:last-child {
             border-bottom: none;
-           
+
         }
-        
+
 
         .modal-map-container {
             height: 300px;
